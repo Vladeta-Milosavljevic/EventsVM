@@ -32,7 +32,8 @@ composer global require laravel/installer
 ### Executing the app
 
 * Activate PHP enviroment
-* Copy .env.example into .env and setup the database
+* Copy .env.example into .env 
+* The project uses SqLite for convenience but if you prefer another option feel free to use it
 * Open the project's root directory in the terminal
   
 
