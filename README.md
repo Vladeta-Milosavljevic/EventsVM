@@ -1,4 +1,4 @@
-# Catering
+# EventsVM
 
 Example SPA events site project made using Laravel, Inertia Js, Vue Js and Tailwind
 
