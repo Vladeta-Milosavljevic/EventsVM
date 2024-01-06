@@ -4,6 +4,7 @@ import { router } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 import { AiDryad, HeFilledUiMenuGrid, CgClose } from "@kalimahapps/vue-icons";
 import EventCreateModal from "./EventCreateModal.vue";
+import NavDropDown from "./NavDropDown.vue"
 import debounce from 'lodash.debounce'
 
 let props = defineProps({
@@ -43,15 +44,19 @@ watch(
         </div>
         <div class="md:static  md:pb-0  md:justify-between absolute ease-in duration-500 md:z-auto z-[-1] md:w-auto w-full bg-blue-800 dark:bg-slate-800 mx-auto text-white flex flex-col items-center text-center md:flex-row text-sm font-bold uppercase px-4 mr-2"
             :class="[menu ? 'top-16' : 'top-[-190%]']">
-            <Link :href="route('home')" class="py-2 hover:underline px-4 mx-2 w-36 md:w-auto">Home</Link>
-            <div v-if="user_id" class="py-2 px-4 mx-2 w-36 md:w-auto hover:underline">
+            <Link :href="route('home')" class="py-2 hover:underline hover:underline-offset-2 px-4 mx-2 w-36 md:w-auto">Home</Link>
+            <div v-if="user_id" class="py-2 px-4 mx-2 w-36 md:w-auto">
                 <EventCreateModal name="Create" :categories="categories" uppercase />
             </div>
             <Link v-if="user_id" :href="route('myEvents')" :data="{ user_id: user_id }"
-                class="py-2 hover:underline px-4 mx-2 w-36 md:w-auto whitespace-nowrap">My Events</Link>
+                class="py-2 hover:underline hover:underline-offset-2 px-4 mx-2 w-36 md:w-auto whitespace-nowrap">My Events</Link>
             <Link v-if="!user_id" :href="route('login')" class="py-2 hover:underline px-4 mx-2 w-36 md:w-auto whitespace-nowrap">Log in</Link>
             <Link v-if="!user_id" :href="route('register')" class="py-2 hover:underline px-4 mx-2 w-36 md:w-auto whitespace-nowrap">Register</Link>
-            <Link v-if="user_id" method="post" :href="route('logout')" as="button" class="py-2 hover:underline uppercase px-4 mx-2 w-36 md:w-auto whitespace-nowrap">Log out</Link>
+            <div class="ml-4">
+
+                <NavDropDown v-if="user_id" />
+            </div>
+            <!-- <Link v-if="user_id" method="post" :href="route('logout')" as="button" class="py-2 hover:underline uppercase px-4 mx-2 w-36 md:w-auto whitespace-nowrap">Log out</Link> -->
             <input v-model="search" placeholder="Search ..." v-html="search" type="text"
                 class="rounded-lg border font-normal text-gray-700  p-2 w-80 md:w-48 mb-2 md:mb-0" />
         </div>

@@ -14,24 +14,11 @@ const page = usePage();
 </script>
 
 <template>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tailwind Blog Template</title>
-        <meta name="author" content="David Grzyb">
-        <meta name="description" content="">
-
-
-
-    </head>
-
-    <body>
-        <div class="flex flex-wrap justify-center">
-            <div v-for="event in events" class="p-2 m-2">
-                <EventItem :event="event" />
-            </div>
+    <div class="flex flex-wrap justify-center">
+        <div v-for="event in events" class="p-2 m-2">
+            <EventItem :event="event" />
         </div>
+    </div>
 
-            <Pagination :links="paginationLinks" class="flex justify-center mb-28 mt-6 text-lg" />
-    </body>
+    <Pagination :links="paginationLinks" class="flex justify-center mb-28 mt-6 text-lg" />
 </template>

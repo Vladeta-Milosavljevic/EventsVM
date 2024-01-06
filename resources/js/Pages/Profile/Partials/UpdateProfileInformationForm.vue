@@ -5,20 +5,22 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
-defineProps({
+let props=defineProps({
     mustVerifyEmail: {
         type: Boolean,
     },
     status: {
         type: String,
     },
+    userName:String,
+    email:String,
 });
 
-const user = usePage().props.auth.user;
+// const user = usePage().props.auth.user;
 
 const form = useForm({
-    name: user.name,
-    email: user.email,
+    name: props.userName,
+    email: props.email,
 });
 </script>
 

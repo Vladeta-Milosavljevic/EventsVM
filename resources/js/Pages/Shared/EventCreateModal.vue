@@ -36,7 +36,7 @@ function reset() {
 </script>
 
 <template>
-    <button @click="showModal = true" class="w-full h-full" :class="{ 'uppercase': uppercase }">
+    <button @click="showModal = true" class="w-full h-full hover:underline hover:underline-offset-2" :class="{ 'uppercase': uppercase }">
         {{ name }}
     </button>
 

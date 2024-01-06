@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 
 let props = defineProps({
-    modelValue: { type: Array, required: true },
+    modelValue: { type: String, required: true },
     selectData: { type: Array, required: true },
     errors: String,
     label: String,
