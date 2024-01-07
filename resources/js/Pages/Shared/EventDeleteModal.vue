@@ -36,7 +36,7 @@ let deleteConfirmed = ref(false)
                 </div>
             </template>
             <template #footer>
-                <Link :href="route('event.destroy', event_id)" method="delete" @click="deleteConfirmed = true"
+                <Link :href="route('event.destroy', event_id)" method="delete" @click="deleteConfirmed = true" as="button"
                     class="w-full bg-red-600 text-white font-bold text-sm uppercase rounded hover:bg-red-700 flex items-center justify-center px-2 py-3 mt-6">
                 Delete The Event</Link>
                 <button @click="showModal = false"

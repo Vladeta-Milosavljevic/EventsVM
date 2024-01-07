@@ -96,9 +96,9 @@ const updatePassword = () => {
                 <div v-if="passwordMessage" class="text-green-500 underline font-bold w-60">{{ passwordMessage }}</div>
 
                 <form @submit.prevent="updatePassword" class="flex flex-col">
-                    <InputGroup v-model="formPassword.current_password" :errors="formPassword.errors.current_password" label="Current password" />
-                    <InputGroup v-model="formPassword.password" :errors="formPassword.errors.password" label="New password" />
-                    <InputGroup v-model="formPassword.password_confirmation" :errors="formPassword.errors.password_confirmation"
+                    <InputGroup v-model="formPassword.current_password" :errors="formPassword.errors.current_password" type="password" label="Current password" />
+                    <InputGroup v-model="formPassword.password" :errors="formPassword.errors.password" type="password" label="New password" />
+                    <InputGroup v-model="formPassword.password_confirmation" :errors="formPassword.errors.password_confirmation" type="password"
                         label="Confirm password" />
                     <button :disabled="formPassword.processing" type="submit"
                         class="w-full bg-green-600 text-white font-bold text-sm uppercase rounded hover:bg-green-700 flex items-center justify-center px-2 py-3 mt-6 disabled:bg-green-200">Update

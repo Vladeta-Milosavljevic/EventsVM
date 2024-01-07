@@ -91,7 +91,6 @@ class EventController extends Controller
         $categories = Category::all()->map(fn ($category) => ['id' => $category->id, 'name' => $category->name]);
         return Inertia::render('Events/EventShow', [
             'event' => $eventData,
-            'category' => $event->category->name,
             'categories' => $categories,
             'image' => str_contains($event->image, "https") ? $event->image : Storage::url($event->image),
             'can' => [

@@ -14,11 +14,13 @@ const page = usePage();
 </script>
 
 <template>
-    <div class="flex flex-wrap justify-center">
-        <div v-for="event in events" class="p-2 m-2">
-            <EventItem :event="event" />
+    <div class="flex flex-col">
+        <div class="flex flex-wrap justify-center">
+            <div v-for="event in events" class="p-2 m-2">
+                <EventItem :event="event" />
+            </div>
         </div>
-    </div>
 
-    <Pagination :links="paginationLinks" class="flex justify-center mb-28 mt-6 text-lg" />
+        <Pagination :links="paginationLinks" class="flex justify-center mb-28 mt-6 text-lg" />
+    </div>
 </template>
