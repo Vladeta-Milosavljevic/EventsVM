@@ -77,7 +77,7 @@ const updatePassword = () => {
         <p class=" flex justify-center text-xl text-gray-600 dark:text-slate-100 text-center uppercase ">
             Update your profile
         </p>
-        <div class="flex flex-wrap justify-center p-4">
+        <div class="flex flex-wrap justify-center p-4 bg-slate-200 dark:bg-slate-800 rounded-lg mt-2">
             <div class="p-6 w-full">
                 <div class="dark:text-slate-100 mb-4 text-center text-lg"> Change username and/or email</div>
                 <div v-if="profileMessage" class="text-green-500 underline font-bold w-60">{{ profileMessage }}</div>

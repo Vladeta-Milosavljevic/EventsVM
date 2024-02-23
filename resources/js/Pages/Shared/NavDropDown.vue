@@ -12,7 +12,7 @@ let toggle = () => {
     show.value = !show.value
     setTimeout(() => {
         show.value = false
-    }, 5000);
+    }, 3000);
 }
 </script>
 

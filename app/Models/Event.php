@@ -17,6 +17,11 @@ class Event extends Model
         'tags',
         'description',
         'image',
+        'addImages',
+    ];
+
+    protected $casts = [
+        'addImages' => 'array'
     ];
 
     public function category(): BelongsTo

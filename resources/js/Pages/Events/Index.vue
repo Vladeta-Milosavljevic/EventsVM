@@ -10,7 +10,6 @@ let props = defineProps({
 });
 let events = props.events.data
 let paginationLinks = props.events.links
-const page = usePage();
 </script>
 
 <template>

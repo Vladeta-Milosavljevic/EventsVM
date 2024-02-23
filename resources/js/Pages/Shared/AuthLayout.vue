@@ -10,16 +10,13 @@ let props=defineProps({
     filters: {type:Object,default:{}},
 })
 const page = usePage();
-let user_id=page.props.auth.user_id ? page.props.auth.user_id : ''
-console.log(page.props.auth.user_id)
 let menu = ref(false);
-let categories = page.props.categories ? page.props.categories : []
 let search = ref(props.filters.search);
 watch(
     search,
     debounce((value) => {
         router.get(
-            route("home"),
+            route("index"),
             { search: value },
             // preserveState: true NE UBACUJ jer je layout trajan (persistent) i nece aktivirati pretragu
             { replace: true }
@@ -45,7 +42,7 @@ watch(
             <div class="justify-between flex w-full items-center bg-blue-800 dark:bg-slate-800 font-bold  md:ml-0 pr-10 py-4 text-3xl md:text-2xl text-white">
                 <div class="flex items-center md:pl-6 pl-2">
                     <AiDryad />
-                    <Link :href="route('home')" class="ml-2 whitespace-nowrap">VM Events</Link>
+                    <Link :href="route('index')" class="ml-2 whitespace-nowrap">VM Events</Link>
                 </div>
                 <div @click="() => menu = !menu" class="cursor-pointer md:hidden">
                     <HeFilledUiMenuGrid v-show="!menu" />

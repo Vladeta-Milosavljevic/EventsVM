@@ -7,6 +7,7 @@ import { usePage } from "@inertiajs/vue3";
 defineOptions({ layout: Layout });
 let props = defineProps({
     myEvents: Object,
+    user_id:String,
 });
 let events = props.myEvents.data
 let noEvents = Object.keys(events).length === 0

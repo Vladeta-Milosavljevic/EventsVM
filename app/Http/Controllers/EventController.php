@@ -21,7 +21,6 @@ class EventController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request->search);
         $tagData = $request->tag;
         $categoryData = $request->category;
         $searchData = $request->search;
@@ -49,14 +48,11 @@ class EventController extends Controller
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );
-        $categories = Category::all()->map(fn ($category) => ['id' => $category->id, 'name' => $category->name]);
 
         return Inertia::render(
             'Events/Index',
             [
                 'events' => $events,
-                'categories' => $categories,
-                'filters' => $request->only(['search'])
             ]
         );
     }
@@ -71,6 +67,13 @@ class EventController extends Controller
         $validatedEvent = $request->validated();
         $imageName = date('YmdHi') . '-' . $validatedEvent['image']->getClientOriginalName();
         $validatedEvent['image'] = $validatedEvent['image']->storeAs('public/images', $imageName);
+        $images = [];
+        foreach ($validatedEvent['addImages'] as $addImage) {
+            $addImageName = date('YmdHi') . '-' . $addImage->getClientOriginalName();
+            $imagePath = $addImage->storeAs('public/images', $addImageName);
+            array_push($images, $imagePath);
+        }
+        $validatedEvent['addImages'] = $images;
         $validatedEvent['user_id'] = auth()->id();
         $validatedEvent['category_id'] = Category::where('name', $validatedEvent['category'])->first()->id;
 
@@ -80,6 +83,12 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
+        // for testing only
+        $addImages = [];
+        foreach ($event->addImages as $image) {
+            array_push($addImages, str_contains($image, "https") ? $image : Storage::url($image));
+        }
+
         $eventData = [
             'id' => $event->id,
             'category' => $event->category->name,
@@ -87,12 +96,10 @@ class EventController extends Controller
             'tags' => $event->tags,
             'description' => $event->description,
             'image' => str_contains($event->image, "https") ? $event->image : Storage::url($event->image),
+            'addImages' => $addImages,
         ];
-        $categories = Category::all()->map(fn ($category) => ['id' => $category->id, 'name' => $category->name]);
         return Inertia::render('Events/EventShow', [
             'event' => $eventData,
-            'categories' => $categories,
-            'image' => str_contains($event->image, "https") ? $event->image : Storage::url($event->image),
             'can' => [
                 'edit' => Auth::user() ? Auth::user()->can('update', $event) : false,
                 'delete' => Auth::user() ? Auth::user()->can('delete', $event) : false,
@@ -105,14 +112,31 @@ class EventController extends Controller
         if ($request->user()->cannot('update', $event)) {
             return redirect(route('event.show', $event->id));
         }
-
         $validatedEvent = $request->validated();
         $validatedEvent['category_id'] = Category::where('name', $validatedEvent['category'])->first()->id;
-        if ($request->image) {
-            $image = $request->validate(['image' => ['mimes:jpeg,jpg,png', 'max:5048']]);
+        if ($validatedEvent['image'] != null) {
             Storage::delete($event->image);
-            $imageName = date('YmdHi') . '-' . $image['image']->getClientOriginalName();
-            $validatedEvent['image'] = $image['image']->storeAs('public/images', $imageName);
+            $imageName = date('YmdHi') . '-' . $validatedEvent['image']->getClientOriginalName();
+            $validatedEvent['image'] = $validatedEvent['image']->storeAs('public/images', $imageName);
+        } else {
+            // if image is not updated null will be saved in the database
+            $validatedEvent['image'] = $event->image;
+        }
+        // if image is added without addImages in form, the addImages element does not exist in $validatedEvent
+        $addImages = array_key_exists("addImages", $validatedEvent) ? $validatedEvent['addImages'] : [];
+        if (count($addImages) > 0) {
+            foreach ($event->addImages as $addImage) {
+                Storage::delete($addImage);
+            }
+            $images = [];
+            foreach ($addImages as $addImage) {
+                $addImageName = date('YmdHi') . '-' . $addImage->getClientOriginalName();
+                $imagePath = $addImage->storeAs('public/images', $addImageName);
+                array_push($images, $imagePath);
+            }
+            $validatedEvent['addImages'] = $images;
+        } else {
+            $validatedEvent['addImages'] = $event->addImages;
         }
         $event->update($validatedEvent);
         return redirect(route('event.show', $event->id));
@@ -134,15 +158,8 @@ class EventController extends Controller
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );
-        $categories = Category::all()->map(fn ($category) => ['id' => $category->id, 'name' => $category->name]);
 
-        return Inertia::render(
-            'Events/MyEvents',
-            [
-                'myEvents' => $myEvents,
-                'categories' => $categories,
-            ]
-        );
+        return Inertia::render('Events/MyEvents', ['myEvents' => $myEvents, 'user_id' => $user_id]);
     }
 
     public function destroy(Request $request, Event $event)
@@ -152,6 +169,9 @@ class EventController extends Controller
             return redirect(route('event.show', $event->id));
         }
         Storage::delete($event->image);
+        foreach ($event->addImages as $addImage) {
+            Storage::delete($addImage);
+        }
         $event->delete();
         return redirect(route('myEvents', ['user_id' => $request->user()->id]));
     }

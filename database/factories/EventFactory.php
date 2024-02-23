@@ -23,6 +23,8 @@ class EventFactory extends Factory
             'tags' => fake()->sentence(3),
             'description' => fake()->paragraph(5),
             'image' => fake()->imageUrl(1920, 1080, 'event'),
+            'addImages' => [fake()->imageUrl(1920, 1080, 'event'),fake()->imageUrl(1920, 1080, 'event'),fake()->imageUrl(1920, 1080, 'event'),
+                fake()->imageUrl(1920, 1080, 'event'),fake()->imageUrl(1920, 1080, 'event'),],
         ];
     }
 }

@@ -25,7 +25,7 @@ const form = useForm({
                 class="w-full bg-green-600 text-white font-bold text-sm uppercase rounded hover:bg-green-700 flex items-center justify-center px-2 py-3 mt-6 disabled:bg-green-200">
                 Register
             </button>
-            <Link :href="route('home')"
+            <Link :href="route('index')"
                 class="w-full bg-blue-600 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6 disabled:bg-green-200">
             Cancel
             </Link>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/', [EventController::class, 'index'])->name('home');
+Route::get('/', [EventController::class, 'index'])->name('index');
 Route::get('/myEvents', [EventController::class, 'myEvents'])->name('myEvents');
 Route::resource('/event', EventController::class);
 Route::resource('/category', CategoryController::class);

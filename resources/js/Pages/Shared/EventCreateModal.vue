@@ -6,14 +6,14 @@ import InputGroup from '@/Pages/Shared/InputGroup.vue';
 import SelectGroup from '@/Pages/Shared/SelectGroup.vue';
 
 
-const page = usePage();
-let user_id = page.props.auth.user_id ? page.props.auth.user_id : ''
-
 let props = defineProps({
     name: String,
     uppercase: Boolean,
     categories: Array,
 })
+
+const page = usePage();
+let categories = page.props.categories
 
 const form = useForm({
     name: '',
@@ -21,17 +21,19 @@ const form = useForm({
     tags: '',
     description: '',
     image: '',
+    addImages: [],
 })
 
 let showModal = ref(false)
 function success() {
     showModal.value = false
     form.reset()
-    router.get(route('myEvents', { 'user_id': user_id }))
 }
 function reset() {
     form.reset()
     form.clearErrors()
+    document.getElementById('image').value = null
+    document.getElementById('addImages').value = null
 }
 </script>
 
@@ -60,10 +62,18 @@ function reset() {
 
                     <div class="mb-6">
                         <label :for="form.image" class="block mb-2">Event's image</label>
-                        <input @input="form.image = $event.target.files[0]" type="file" name="image" required
+                        <input @input="form.image = $event.target.files[0]" type="file" name="image" id="image" required
                             class="rounded-lg border border-gray-400 p-2 w-full" />
                         <div v-if="form.errors.image" class="block mb-2 mt-1 text-red-600">
                             {{ form.errors.image }}
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label :for="form.addImages" class="block mb-2">Event's additional images (no more than five)</label>
+                        <input @input="form.addImages = $event.target.files" type="file" name="addImages[]" id="addImages" required
+                            class="rounded-lg border border-gray-400 p-2 w-full" multiple />
+                        <div v-for="(item, index) in form.errors" :key="index" class="block mb-2 mt-1 text-red-600">
+                            <div v-if="index.includes('addImages')"> {{ form.errors[index] }}</div>
                         </div>
                     </div>
 

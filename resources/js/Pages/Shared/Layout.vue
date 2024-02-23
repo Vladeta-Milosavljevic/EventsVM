@@ -21,9 +21,9 @@ let menu = ref(false);
 
 
         <!-- Text Header -->
-        <header class="w-full container mx-auto" :class="[menu ? 'mt-56 ease-in duration-500' : 'mt-16 ease-in duration-500']">
+        <header class="w-full container mx-auto" :class="[menu ? 'mt-64 ease-in duration-500' : 'mt-16 ease-in duration-500']">
             <div class="flex flex-col items-center py-12">
-                <div class="font-bold text-gray-800 uppercase dark:text-slate-100 text-5xl text-center" href="#">
+                <div class="font-bold text-gray-800 uppercase dark:text-slate-100 text-5xl text-center ">
                     Events VM
                 </div>
                 <p class="text-lg text-gray-600 dark:text-slate-100 text-center">
