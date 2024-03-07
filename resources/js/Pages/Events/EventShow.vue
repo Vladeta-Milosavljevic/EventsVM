@@ -11,8 +11,7 @@ const props = defineProps({
     event: Object,
     can: Object
 });
-let images = [props.event.image, ...props.event.addImages]
-console.log(images)
+console.log(props.event.category.name)
 let tags = props.event.tags.split(" ")
 </script>
 
@@ -20,7 +19,7 @@ let tags = props.event.tags.split(" ")
     <div class="flex justify-center w-4/5 mb-24 dark:bg-slate-800 rounded-lg">
         <div class="w-full rounded-lg overflow-hidden shadow-lg">
             <swiper-container clickable="true" navigation="true" pagination-clickable="true" scrollbar-draggable="true">
-                <swiper-slide class="w-full h-full" v-for="image in images"><img class="w-full h-auto" :src="image"
+                <swiper-slide class="w-full h-full" v-for="image in event.images"><img class="w-full h-auto" :src="image"
                         alt="Image is not available"></swiper-slide>
             </swiper-container>
             <div class="px-6 py-4">
@@ -38,17 +37,16 @@ let tags = props.event.tags.split(" ")
                     class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 hover:bg-gray-300 mr-2 mb-2">
                 {{ tag }}</Link>
             </div>
-            <div class="flex flex-row h-auto">
+            <div class="flex flex-row h-14 mt-2">
                 <div v-if="can.edit"
-                    class="w-1/2 h-12 bg-green-600 text-white font-bold text-sm uppercase rounded hover:bg-green-700 flex items-center justify-center px-2 py-3 mt-6 disabled:bg-green-200">
-                    <EventUpdateModal name="Edit The Event" :event="event" uppercase />
+                    class="w-1/2 h-full bg-green-600 text-white font-bold text-sm uppercase rounded hover:bg-green-700 flex items-center justify-center disabled:bg-green-200">
+                    <EventUpdateModal :event="event" />
                 </div>
 
                 <button v-if="can.delete"
-                    class="w-1/2 h-12 bg-red-600 text-white font-bold text-sm uppercase rounded hover:bg-red-700 flex items-center justify-center px-2 py-3 mt-6 disabled:bg-green-200">
-                    <EventDeleteModal name="Delete The Event" :event_id="event.id" uppercase />
+                    class="w-1/2 h-full bg-red-600 text-white font-bold text-sm uppercase rounded hover:bg-red-700 flex items-center justify-center  disabled:bg-green-200">
+                    <EventDeleteModal :event_id="event.id"  />
                 </button>
-
             </div>
 
         </div>

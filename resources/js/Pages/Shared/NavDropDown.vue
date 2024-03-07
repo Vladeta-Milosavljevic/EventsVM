@@ -14,6 +14,11 @@ let toggle = () => {
         show.value = false
     }, 3000);
 }
+function clicked(){
+    setTimeout(() => {
+        show.value=false
+    }, 300);
+}
 </script>
 
 <template>
@@ -33,11 +38,11 @@ let toggle = () => {
             leave-to-class="opacity-0 -translate-y-12 scale-100">
             <div v-show="show"
                 class="absolute -right-3 md:right-0  py-2 mt-0 w-32 bg-blue-800 dark:bg-slate-800 rounded-md shadow-xl flex flex-col items-center">
-                <Link method="post" :href="route('logout')" as="button"
+                <Link method="post" :href="route('logout')" as="button" @click="clicked"
                     class="block py-2 hover:underline hover:underline-offset-2 px-4 mx-2 md:w-auto whitespace-nowrap uppercase">
                 Log Out
                 </Link>
-                <Link :href="route('profile.edit')" as="button"
+                <Link :href="route('profile.edit')" as="button" @click="clicked"
                     class="block py-2 hover:underline hover:underline-offset-2 px-4 mx-2 w-36 md:w-auto whitespace-nowrap uppercase">
                 Profile
                 </Link>

@@ -15,6 +15,9 @@ let paginationLinks = props.events.links
 <template>
     <div class="flex flex-col">
         <div class="flex flex-wrap justify-center">
+            <div v-if="events.length===0" class="p-2 m-2 text-xl text-gray-600 dark:text-slate-100 text-center">
+                   No events located in your search.
+            </div>
             <div v-for="event in events" class="p-2 m-2">
                 <EventItem :event="event" />
             </div>

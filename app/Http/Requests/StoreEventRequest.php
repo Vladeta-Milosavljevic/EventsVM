@@ -23,7 +23,7 @@ class StoreEventRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:50', 'min:5', 'unique:events'],
-            'category' => ['required', 'max:50', 'min:5'],
+            'category_id' => ['required'],
             'tags' => ['required', 'max:50', 'min:5'],
             'description' => ['required', 'max:300', 'min:25'],
             'image' => ['required', 'mimes:jpeg,jpg,png', 'max:1100'],
@@ -35,6 +35,7 @@ class StoreEventRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'category_id' => 'The category field is required',
             'addImages.max' => 'No more than five images can be uploaded',
             'addImages.*.max' => 'The image is too large',
             'addImages.*.mimes' => 'The image field must be a file of type: jpeg, jpg, png.',

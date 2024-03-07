@@ -4,8 +4,6 @@ import { ref } from 'vue'
 import { Link } from "@inertiajs/vue3";
 
 let props = defineProps({
-    name: String,
-    uppercase: Boolean,
     event_id: Number
 })
 
@@ -15,8 +13,8 @@ let deleteConfirmed = ref(false)
 </script>
 
 <template>
-    <button @click="showModal = true" class="w-full h-full" :class="{ 'uppercase': uppercase }">
-        {{ name }}
+    <button @click="showModal = true" class="w-full h-full uppercase">
+        Delete The Event
     </button>
 
     <Teleport to="body">

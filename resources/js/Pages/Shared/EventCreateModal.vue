@@ -1,14 +1,12 @@
 <script setup>
 import ModalItem from '@/Pages/Shared/ModalItem.vue'
 import { ref } from 'vue'
-import { useForm, router, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import InputGroup from '@/Pages/Shared/InputGroup.vue';
 import SelectGroup from '@/Pages/Shared/SelectGroup.vue';
 
 
 let props = defineProps({
-    name: String,
-    uppercase: Boolean,
     categories: Array,
 })
 
@@ -17,7 +15,7 @@ let categories = page.props.categories
 
 const form = useForm({
     name: '',
-    category: '',
+    category_id: '',
     tags: '',
     description: '',
     image: '',
@@ -25,21 +23,24 @@ const form = useForm({
 })
 
 let showModal = ref(false)
-function success() {
-    showModal.value = false
-    form.reset()
-}
+
 function reset() {
-    form.reset()
     form.clearErrors()
+    form.reset()
     document.getElementById('image').value = null
     document.getElementById('addImages').value = null
 }
+
+function success() {
+    showModal.value = false
+    reset()
+}
+
 </script>
 
 <template>
-    <button @click="showModal = true" class="w-full h-full hover:underline hover:underline-offset-2" :class="{ 'uppercase': uppercase }">
-        {{ name }}
+    <button @click="showModal = true" class="w-full h-full hover:underline hover:underline-offset-2 uppercase">
+        Create
     </button>
 
     <Teleport to="body">
@@ -50,11 +51,13 @@ function reset() {
 
                 </div>
             </template>
+
             <template #default>
-                <form @submit.prevent="form.post(route('event.store'), { onSuccess: () => success() })" class="flex flex-col">
+                <!-- preserveState: false - to show the updated list of events instead of preserving the old one -->
+                <form @submit.prevent="form.post(route('event.store'), { preserveState: false, onSuccess: () => success() })" class="flex flex-col">
                     <InputGroup autofocus v-model="form.name" :errors="form.errors.name" label="Event's name" />
 
-                    <SelectGroup v-model="form.category" :selectData="categories" :errors="form.errors.category" label="Event's category" />
+                    <SelectGroup v-model="form.category_id" :selectData="categories" :errors="form.errors.category_id" label="Event's category" />
 
                     <InputGroup v-model="form.tags" :errors="form.errors.tags" label="Event's tags - please separate them with whitespace" />
 
@@ -82,6 +85,7 @@ function reset() {
                         The Event</button>
                 </form>
             </template>
+
             <template #footer>
                 <button @click="reset()"
                     class="w-full bg-yellow-600 text-white font-bold text-sm uppercase rounded hover:bg-yellow-700 flex items-center justify-center px-2 py-3 mt-6">Reset

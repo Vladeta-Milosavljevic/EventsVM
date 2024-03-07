@@ -75,7 +75,6 @@ class EventController extends Controller
         }
         $validatedEvent['addImages'] = $images;
         $validatedEvent['user_id'] = auth()->id();
-        $validatedEvent['category_id'] = Category::where('name', $validatedEvent['category'])->first()->id;
 
         Event::create($validatedEvent);
         return redirect(route('myEvents', ['user_id' => $request->user()->id]));
@@ -83,20 +82,21 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
-        // for testing only
-        $addImages = [];
-        foreach ($event->addImages as $image) {
-            array_push($addImages, str_contains($image, "https") ? $image : Storage::url($image));
+
+        $imagesList=array_merge([$event['image']],$event['addImages']);
+        $images=[];
+        foreach ($imagesList as $image) {
+            array_push($images, str_contains($image, "https") ? $image : Storage::url($image));
         }
 
         $eventData = [
             'id' => $event->id,
+            'category_id'=>$event->category_id,
             'category' => $event->category->name,
             'name' => $event->name,
             'tags' => $event->tags,
             'description' => $event->description,
-            'image' => str_contains($event->image, "https") ? $event->image : Storage::url($event->image),
-            'addImages' => $addImages,
+            'images' => $images,
         ];
         return Inertia::render('Events/EventShow', [
             'event' => $eventData,
@@ -113,7 +113,6 @@ class EventController extends Controller
             return redirect(route('event.show', $event->id));
         }
         $validatedEvent = $request->validated();
-        $validatedEvent['category_id'] = Category::where('name', $validatedEvent['category'])->first()->id;
         if ($validatedEvent['image'] != null) {
             Storage::delete($event->image);
             $imageName = date('YmdHi') . '-' . $validatedEvent['image']->getClientOriginalName();
@@ -145,7 +144,7 @@ class EventController extends Controller
     public function myEvents(Request $request)
     {
         $user_id = $request->user_id;
-        $myEvents = Event::where('user_id', $user_id)
+        $myEvents = fn() => Event::where('user_id', $user_id)
             ->orderBy('id', 'desc')
             ->paginate(12)
             ->withQueryString()

@@ -10,7 +10,7 @@ let tags = props.event.tags.split(" ")
 
 <template>
     <div class="flex flex-wrap rounded-lg dark:bg-gray-800">
-        <div class="max-w-sm rounded-lg overflow-hidden shadow-lg">
+        <div class="w-96 rounded-lg overflow-hidden shadow-lg">
             <img class="w-full h-72" :src="event.image" alt="Sunset in the mountains">
             <div class="px-6 py-4">
                 <Link :href="route('event.show', event.id)" class="font-bold text-xl mb-2 h-12 dark:text-slate-100">{{ event.name }}</Link>

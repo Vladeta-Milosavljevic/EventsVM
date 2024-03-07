@@ -2,12 +2,13 @@
 import Layout from "@/Pages/Shared/Layout.vue";
 import EventItem from "@/Pages/Shared/EventItem.vue";
 import Pagination from "@/Pages/Shared/Pagination.vue";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
+import { onMounted } from "vue";
 
 defineOptions({ layout: Layout });
 let props = defineProps({
     myEvents: Object,
-    user_id:String,
+    user_id: String,
 });
 let events = props.myEvents.data
 let noEvents = Object.keys(events).length === 0
@@ -16,6 +17,7 @@ const page = usePage();
 </script>
 
 <template>
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +41,6 @@ const page = usePage();
             </div>
         </div>
 
-            <Pagination v-if="!noEvents" :links="paginationLinks" class="flex justify-center mb-32" />
+        <Pagination v-if="!noEvents" :links="paginationLinks" class="flex justify-center mb-32" />
     </body>
 </template>
