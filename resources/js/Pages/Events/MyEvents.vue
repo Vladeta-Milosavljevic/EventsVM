@@ -2,8 +2,6 @@
 import Layout from "@/Pages/Shared/Layout.vue";
 import EventItem from "@/Pages/Shared/EventItem.vue";
 import Pagination from "@/Pages/Shared/Pagination.vue";
-import { usePage, router } from "@inertiajs/vue3";
-import { onMounted } from "vue";
 
 defineOptions({ layout: Layout });
 let props = defineProps({
@@ -13,7 +11,6 @@ let props = defineProps({
 let events = props.myEvents.data
 let noEvents = Object.keys(events).length === 0
 let paginationLinks = props.myEvents.links
-const page = usePage();
 </script>
 
 <template>

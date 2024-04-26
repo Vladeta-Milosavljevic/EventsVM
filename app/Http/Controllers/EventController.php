@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
@@ -45,10 +46,10 @@ class EventController extends Controller
                     'category' => $events->category->name,
                     'name' => $events->name,
                     'tags' => $events->tags,
+                    'price'=> $events->price,
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );
-
         return Inertia::render(
             'Events/Index',
             [
@@ -88,18 +89,10 @@ class EventController extends Controller
         foreach ($imagesList as $image) {
             array_push($images, str_contains($image, "https") ? $image : Storage::url($image));
         }
-
-        $eventData = [
-            'id' => $event->id,
-            'category_id'=>$event->category_id,
-            'category' => $event->category->name,
-            'name' => $event->name,
-            'tags' => $event->tags,
-            'description' => $event->description,
-            'images' => $images,
-        ];
+        $event['images']=$images;
+        $event['category']=$event->category->name;
         return Inertia::render('Events/EventShow', [
-            'event' => $eventData,
+            'event' => new EventResource($event),
             'can' => [
                 'edit' => Auth::user() ? Auth::user()->can('update', $event) : false,
                 'delete' => Auth::user() ? Auth::user()->can('delete', $event) : false,
@@ -113,6 +106,7 @@ class EventController extends Controller
             return redirect(route('event.show', $event->id));
         }
         $validatedEvent = $request->validated();
+        // dd($validatedEvent);
         if ($validatedEvent['image'] != null) {
             Storage::delete($event->image);
             $imageName = date('YmdHi') . '-' . $validatedEvent['image']->getClientOriginalName();
@@ -154,6 +148,7 @@ class EventController extends Controller
                     'category' => $events->category->name,
                     'name' => $events->name,
                     'tags' => $events->tags,
+                    'price'=> $events->price,
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );

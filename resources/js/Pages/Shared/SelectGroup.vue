@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <label :for="modelValue" class="block mb-2">{{ label }} {{ modelValue }}</label>
+    <label :for="modelValue" class="block mb-2">{{ label }}</label>
 
     <select name="category" :value="modelValue" @click="$emit('update:modelValue', $event.target.value)" :required="required"
         class="rounded-lg border border-gray-400 p-2 w-full mb-6 dark:text-gray-700">

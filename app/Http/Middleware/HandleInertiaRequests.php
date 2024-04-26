@@ -39,6 +39,10 @@ class HandleInertiaRequests extends Middleware
             ],
             'categories' => Category::all()->map(fn ($category) => ['id' => $category->id, 'name' => $category->name]),
             'filters' => $request->only(['search']),
+            'flash' => [
+                'stripeSuccess' => fn () => $request->session()->get('stripeSuccess'),
+                'stripeError' => fn () => $request->session()->get('stripeError'),
+            ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

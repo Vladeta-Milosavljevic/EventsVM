@@ -3,16 +3,24 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
+// Event URLs
 Route::get('/', [EventController::class, 'index'])->name('index');
-Route::get('/myEvents', [EventController::class, 'myEvents'])->name('myEvents');
+Route::get('/myEvents/{user_id}', [EventController::class, 'myEvents'])->name('myEvents');
 Route::resource('/event', EventController::class);
 Route::resource('/category', CategoryController::class);
+
+
+// Stripe URLs
+Route::post('/stripe/buyTicket', [StripeController::class, 'buyTicket'])->name('stripe.buyTicket')->middleware('auth');
+Route::get('/stripe/success/{event}', [StripeController::class, 'success'])->name('stripe.success');
+Route::get('/stripe/cancel/{event}', [StripeController::class, 'cancel'])->name('stripe.cancel');
+Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stripe.webhook');
 
 
 Route::get('/dashboard', function () {
@@ -25,4 +33,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('stripe_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->cascadeOnDelete()->constrained();
-            $table->foreignId('category_id')->cascadeOnDelete()->constrained();
-            $table->string('name');
-            $table->string('tags');
-            $table->string('description');
+            $table->foreignId('event_id')->constrained();
+            $table->string('session_id');
+            $table->string('status');
             $table->decimal('price',10,2);
-            $table->string('image')->nullable();
-            $table->string('addImages')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('stripe_transactions');
     }
 };

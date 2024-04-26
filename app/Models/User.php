@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class);
     }
+
+    public function StripeTransactions(): HasMany
+    {
+        return $this->hasMany(StripeTransaction::class);
+    }
 }

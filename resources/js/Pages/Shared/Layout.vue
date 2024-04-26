@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 import Navbar from "@/Pages/Shared/Navbar.vue";
 
@@ -23,9 +23,9 @@ let menu = ref(false);
         <!-- Text Header -->
         <header class="w-full container mx-auto" :class="[menu ? 'mt-64 ease-in duration-500' : 'mt-16 ease-in duration-500']">
             <div class="flex flex-col items-center py-12">
-                <div class="font-bold text-gray-800 uppercase dark:text-slate-100 text-5xl text-center ">
+                <Link :href="route('index')" class="font-bold text-gray-800 uppercase dark:text-slate-100 text-5xl text-center ">
                     Events VM
-                </div>
+                </Link>
                 <p class="text-lg text-gray-600 dark:text-slate-100 text-center">
                     Register and search for your favorite gigs, party spots and so on
                 </p>

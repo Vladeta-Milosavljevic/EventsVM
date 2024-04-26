@@ -18,6 +18,7 @@ const form = useForm({
     category_id: props.event.category_id,
     tags: props.event.tags,
     description: props.event.description,
+    price: props.event.price,
     image: '',
     addImages: [],
     _method: 'put'
@@ -49,11 +50,15 @@ function reset() {
                 </div>
             </template>
             <template #default>
-                <form @submit.prevent="form.post(route('event.update', event.id), { onSuccess: () => success() })" class="flex flex-col">
+                <!-- preserveState: false - to show the updated list of events instead of preserving the old one -->
+                <form @submit.prevent="form.post(route('event.update', event.id), { preserveState: false, onSuccess: () => success() })"
+                    class="flex flex-col">
                     <InputGroup autofocus v-model="form.name" :errors="form.errors.name" label="Event's name" />
                     <SelectGroup v-model="form.category_id" :selectData="categories" :errors="form.errors.category_id" label="Event's category" />
                     <InputGroup v-model="form.tags" :errors="form.errors.tags" label="Event's tags - please separate them with whitespace" />
                     <InputGroup inputType="textarea" v-model="form.description" :errors="form.errors.description" label="Event's description" />
+                    <InputGroup type="decimal" v-model="form.price" :errors="form.errors.price"
+                        label="Event's ticket price. No more than 200 €, and dont forget two decimal places." />
                     <div class="mb-6">
                         <label :for="form.image" class="block mb-2">Event's title image</label>
                         <input @input="form.image = $event.target.files[0]" type="file" name="image" id="image"
@@ -64,7 +69,8 @@ function reset() {
                     </div>
 
                     <div class="mb-6">
-                        <label :for="form.addImages" class="block mb-2">If you choose to update   please update all images as the previous will be <span class="text-red-400">deleted</span> (no more than five)</label>
+                        <label :for="form.addImages" class="block mb-2">If you choose to update please update all images as the previous will be <span
+                                class="text-red-400">deleted</span> (no more than five)</label>
                         <input @input="form.addImages = $event.target.files" type="file" name="addImages[]" id="addImages"
                             class="rounded-lg border border-gray-400 p-2 w-full" multiple />
                         <div v-for="(item, index) in form.errors" :key="index" class="block mb-2 mt-1 text-red-600">

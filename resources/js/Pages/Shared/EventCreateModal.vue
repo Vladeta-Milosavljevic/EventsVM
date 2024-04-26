@@ -18,6 +18,7 @@ const form = useForm({
     category_id: '',
     tags: '',
     description: '',
+    price:'',
     image: '',
     addImages: [],
 })
@@ -33,7 +34,7 @@ function reset() {
 
 function success() {
     showModal.value = false
-    reset()
+    form.reset()
 }
 
 </script>
@@ -62,6 +63,7 @@ function success() {
                     <InputGroup v-model="form.tags" :errors="form.errors.tags" label="Event's tags - please separate them with whitespace" />
 
                     <InputGroup inputType="textarea" v-model="form.description" :errors="form.errors.description" label="Event's description" />
+                    <InputGroup type="decimal" v-model="form.price" :errors="form.errors.price" label="Event's ticket price. No more than 200 €, and dont forget two decimal places." />
 
                     <div class="mb-6">
                         <label :for="form.image" class="block mb-2">Event's image</label>

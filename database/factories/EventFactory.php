@@ -17,14 +17,17 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => rand(1,3),
-            'category_id' => rand(1,4),
+            'user_id' => rand(1, 3),
+            'category_id' => rand(1, 4),
             'name' => fake()->sentence(2),
             'tags' => fake()->sentence(3),
             'description' => fake()->paragraph(5),
+            'price' => fake()->randomFloat(2, 10, 100),
             'image' => fake()->imageUrl(1920, 1080, 'event'),
-            'addImages' => [fake()->imageUrl(1920, 1080, 'event'),fake()->imageUrl(1920, 1080, 'event'),fake()->imageUrl(1920, 1080, 'event'),
-                fake()->imageUrl(1920, 1080, 'event'),fake()->imageUrl(1920, 1080, 'event'),],
+            'addImages' => [
+                fake()->imageUrl(1920, 1080, 'event'), fake()->imageUrl(1920, 1080, 'event'), fake()->imageUrl(1920, 1080, 'event'),
+                fake()->imageUrl(1920, 1080, 'event'), fake()->imageUrl(1920, 1080, 'event'),
+            ],
         ];
     }
 }

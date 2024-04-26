@@ -52,7 +52,7 @@ watch(searchFilter, () => { search.value = searchFilter.value })
                 <EventCreateModal />
             </div>
             <div v-if="user_id">
-                <NavLink :linkData="route('myEvents')" :data="{ user_id: user_id }" addStyle="whitespace-nowrap" text="My Events" />
+                <NavLink :linkData="route('myEvents',user_id)" addStyle="whitespace-nowrap" text="My Events" />
             </div>
 
                 <div v-if="!user_id">
