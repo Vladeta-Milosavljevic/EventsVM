@@ -25,7 +25,7 @@ class EventController extends Controller
         $tagData = $request->tag;
         $categoryData = $request->category;
         $searchData = $request->search;
-        $events = Event::query()
+        $events = Event::with('category')
             ->when($searchData, function ($query, $searchData) {
                 $query->where('name', 'like', "%{$searchData}%")
                     ->orWhere('tags', 'like', "%{$searchData}%")
@@ -46,7 +46,7 @@ class EventController extends Controller
                     'category' => $events->category->name,
                     'name' => $events->name,
                     'tags' => $events->tags,
-                    'price'=> $events->price,
+                    'price' => $events->price,
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );
@@ -84,13 +84,13 @@ class EventController extends Controller
     public function show(Event $event)
     {
 
-        $imagesList=array_merge([$event['image']],$event['addImages']);
-        $images=[];
+        $imagesList = array_merge([$event['image']], $event['addImages']);
+        $images = [];
         foreach ($imagesList as $image) {
             array_push($images, str_contains($image, "https") ? $image : Storage::url($image));
         }
-        $event['images']=$images;
-        $event['category']=$event->category->name;
+        $event['images'] = $images;
+        $event['category'] = $event->category->name;
         return Inertia::render('Events/EventShow', [
             'event' => new EventResource($event),
             'can' => [
@@ -138,7 +138,8 @@ class EventController extends Controller
     public function myEvents(Request $request)
     {
         $user_id = $request->user_id;
-        $myEvents = fn() => Event::where('user_id', $user_id)
+        $myEvents = fn () => Event::with('category')
+            ->where('user_id', $user_id)
             ->orderBy('id', 'desc')
             ->paginate(12)
             ->withQueryString()
@@ -148,7 +149,7 @@ class EventController extends Controller
                     'category' => $events->category->name,
                     'name' => $events->name,
                     'tags' => $events->tags,
-                    'price'=> $events->price,
+                    'price' => $events->price,
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );
