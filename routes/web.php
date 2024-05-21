@@ -5,9 +5,13 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
+use App\Mail\EventCreated;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+require __DIR__ . '/auth.php';
 
 // Event URLs
 Route::get('/', [EventController::class, 'index'])->name('index');
@@ -33,4 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+
+Route::get('/testemail',function(){
+    $eventName='Test Event';
+
+    Mail::to('vertigo.vm@outlook.com')->send(new EventCreated($eventName));
+});
+
+

@@ -11,6 +11,10 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventCreated;
+use App\Mail\EventDeleted;
+use App\Mail\EventUpdated;
 
 class EventController extends Controller
 {
@@ -77,7 +81,8 @@ class EventController extends Controller
         $validatedEvent['addImages'] = $images;
         $validatedEvent['user_id'] = auth()->id();
 
-        Event::create($validatedEvent);
+        $event = Event::create($validatedEvent);
+        Mail::to('vertigo.vm@outlook.com')->queue(new EventCreated($event->id, $event->name));
         return redirect(route('myEvents', ['user_id' => $request->user()->id]));
     }
 
@@ -132,6 +137,7 @@ class EventController extends Controller
             $validatedEvent['addImages'] = $event->addImages;
         }
         $event->update($validatedEvent);
+        Mail::to('vertigo.vm@outlook.com')->queue(new EventUpdated($event->id, $event->name));
         return redirect(route('event.show', $event->id));
     }
 
@@ -167,7 +173,9 @@ class EventController extends Controller
         foreach ($event->addImages as $addImage) {
             Storage::delete($addImage);
         }
+        $eventName = $event->name;
         $event->delete();
+        Mail::to('vertigo.vm@outlook.com')->queue(new EventDeleted($eventName));
         return redirect(route('myEvents', ['user_id' => $request->user()->id]));
     }
 }
