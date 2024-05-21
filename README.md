@@ -12,6 +12,8 @@ Example SPA events site project made using Laravel, Inertia Js, Vue Js and Tailw
 * Search,
 * Laravel policies,
 * Pagination.
+* Stripe online payment
+* Email confirmation with queue async. system
 
 ### Dependencies
 
@@ -75,6 +77,12 @@ npm run dev
 
 ```
 php artisan serve
+```
+
+* Note: for email to run it is necessary to add your email client data in the env file and in the terminal to run
+
+```
+php artisan queue:work
 ```
 
 ## Author
