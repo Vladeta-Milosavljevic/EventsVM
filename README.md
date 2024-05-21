@@ -13,7 +13,7 @@ Example SPA events site project made using Laravel, Inertia Js, Vue Js and Tailw
 * Laravel policies,
 * Pagination.
 * Stripe online payment
-* Email 
+* Email confirmation with queue async. system
 
 ### Dependencies
 
