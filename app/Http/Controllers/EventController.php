@@ -6,7 +6,6 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
-use App\Models\Category;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -82,13 +81,12 @@ class EventController extends Controller
         $validatedEvent['user_id'] = auth()->id();
 
         $event = Event::create($validatedEvent);
-        Mail::to('vertigo.vm@outlook.com')->queue(new EventCreated($event->id, $event->name));
+        Mail::to(env('TEST_EMAIL'))->queue(new EventCreated($event->id, $event->name));
         return redirect(route('myEvents', ['user_id' => $request->user()->id]));
     }
 
     public function show(Event $event)
     {
-
         $imagesList = array_merge([$event['image']], $event['addImages']);
         $images = [];
         foreach ($imagesList as $image) {
@@ -111,7 +109,6 @@ class EventController extends Controller
             return redirect(route('event.show', $event->id));
         }
         $validatedEvent = $request->validated();
-        // dd($validatedEvent);
         if ($validatedEvent['image'] != null) {
             Storage::delete($event->image);
             $imageName = date('YmdHi') . '-' . $validatedEvent['image']->getClientOriginalName();
@@ -137,8 +134,8 @@ class EventController extends Controller
             $validatedEvent['addImages'] = $event->addImages;
         }
         $event->update($validatedEvent);
-        Mail::to('vertigo.vm@outlook.com')->queue(new EventUpdated($event->id, $event->name));
-        return redirect(route('event.show', $event->id));
+        Mail::to(env('TEST_EMAIL'))->queue(new EventUpdated($event->id, $event->name));
+        return redirect(route('myEvents', Auth::user()->id));
     }
 
     public function myEvents(Request $request)
@@ -175,7 +172,7 @@ class EventController extends Controller
         }
         $eventName = $event->name;
         $event->delete();
-        Mail::to('vertigo.vm@outlook.com')->queue(new EventDeleted($eventName));
+        Mail::to(env('TEST_EMAIL'))->queue(new EventDeleted($eventName));
         return redirect(route('myEvents', ['user_id' => $request->user()->id]));
     }
 }

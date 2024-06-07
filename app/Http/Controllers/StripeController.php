@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\StripeSuccess;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\StripeTransaction;
+use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -102,6 +105,11 @@ class StripeController extends Controller
                 if ($transaction && $transaction->status === 'pending') {
                     $transaction->status = 'paid';
                     $transaction->save();
+                }
+                if ($transaction && $transaction->status === 'paid') {
+                    $eventName = Event::where('id', $transaction->event_id)->get('name')[0]->name;
+                    $userName = User::where('id', $transaction->user_id)->get('name')[0]->name;
+                    Mail::to(env('TEST_EMAIL'))->queue(new StripeSuccess($eventName, $userName, $transaction->price));
                 }
             default:
                 echo 'Received unknown event type ' . $event->type;

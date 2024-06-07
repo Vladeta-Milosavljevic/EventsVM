@@ -17,7 +17,8 @@ require __DIR__ . '/auth.php';
 Route::get('/', [EventController::class, 'index'])->name('index');
 Route::get('/myEvents/{user_id}', [EventController::class, 'myEvents'])->name('myEvents');
 Route::resource('/event', EventController::class);
-Route::resource('/category', CategoryController::class);
+
+Route::resource('/category', CategoryController::class)->middleware('is_Admin');
 
 
 // Stripe URLs
@@ -38,10 +39,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/testemail',function(){
-    $eventName='Test Event';
 
-    Mail::to('vertigo.vm@outlook.com')->send(new EventCreated($eventName));
-});
 
 

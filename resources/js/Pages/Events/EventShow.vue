@@ -1,8 +1,8 @@
 <script setup>
 import Layout from "@/Pages/Shared/Layout.vue";
 import EventUpdateModal from "@/Pages/Shared/EventUpdateModal.vue";
-import EventDeleteModal from "@/Pages/Shared/EventDeleteModal.vue";
-import { Link, useForm, usePage, } from "@inertiajs/vue3";
+import DeleteModal from "@/Pages/Shared/DeleteModal.vue";
+import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import { register } from 'swiper/element/bundle';
 
 register();
@@ -10,7 +10,7 @@ register();
 defineOptions({ layout: Layout });
 const props = defineProps({
     event: Object,
-    can: Object
+    can: Object,
 });
 let event = props.event.data
 let tags = props.event.data.tags.split(" ")
@@ -19,6 +19,7 @@ let user = page.props.auth.userName
 const form = useForm({
     event_id: props.event.data.id,
 })
+
 </script>
 
 <template>
@@ -36,7 +37,7 @@ const form = useForm({
             </swiper-container>
             <div class="px-6 py-4">
                 <div class="font-bold text-xl my-2 dark:text-slate-100">{{ event.name }}</div>
-                <Link :href="route('index')" method="POST" :data="{ category: event.category }"
+                <Link :href="route('index')" method="POST" :data="{ category: event.category }" as="button"
                     class="text-gray-700 hover:text-gray-900 dark:text-slate-100 dark:hover:text-slate-200 hover:underline text-base w-auto">
                 {{ event.category }} <br>
                 </Link>
@@ -69,7 +70,7 @@ const form = useForm({
                 </div>
                 <button v-if="can.delete"
                     class="w-1/2 h-full bg-red-600 text-white font-bold text-sm uppercase hover:bg-red-700 flex items-center justify-center  disabled:bg-green-200">
-                    <EventDeleteModal :event_id="event.id" />
+                    <DeleteModal :routeData="route('event.destroy',event.id)" text="Delete the event." />
                 </button>
             </div>
 

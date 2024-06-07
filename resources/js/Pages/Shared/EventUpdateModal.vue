@@ -1,9 +1,11 @@
 <script setup>
 import ModalItem from '@/Pages/Shared/ModalItem.vue'
-import { ref, computed, watch } from 'vue'
-import { useForm, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue'
+import { useForm, usePage, router } from '@inertiajs/vue3';
 import InputGroup from '@/Pages/Shared/InputGroup.vue';
 import SelectGroup from '@/Pages/Shared/SelectGroup.vue';
+import ImageGroup from '@/Pages/Shared/ImageGroup.vue';
+import ImagesGroup from '@/Pages/Shared/ImagesGroup.vue';
 
 
 let props = defineProps({
@@ -21,10 +23,11 @@ const form = useForm({
     price: props.event.price,
     image: '',
     addImages: [],
-    _method: 'put'
+    _method:'put'
 })
 let showModal = ref(false)
 function success() {
+    form.reset()
     showModal.value = false
 }
 
@@ -50,33 +53,22 @@ function reset() {
                 </div>
             </template>
             <template #default>
-                <!-- preserveState: false - to show the updated list of events instead of preserving the old one -->
-                <form @submit.prevent="form.post(route('event.update', event.id), { preserveState: false, onSuccess: () => success() })"
-                    class="flex flex-col">
+                <form @submit.prevent="form.post(route('event.update', event.id), { onSuccess: () => success() })" class="flex flex-col">
                     <InputGroup autofocus v-model="form.name" :errors="form.errors.name" label="Event's name" />
+
                     <SelectGroup v-model="form.category_id" :selectData="categories" :errors="form.errors.category_id" label="Event's category" />
+
                     <InputGroup v-model="form.tags" :errors="form.errors.tags" label="Event's tags - please separate them with whitespace" />
+
                     <InputGroup inputType="textarea" v-model="form.description" :errors="form.errors.description" label="Event's description" />
+
                     <InputGroup type="decimal" v-model="form.price" :errors="form.errors.price"
                         label="Event's ticket price. No more than 200 €, and dont forget two decimal places." />
-                    <div class="mb-6">
-                        <label :for="form.image" class="block mb-2">Event's title image</label>
-                        <input @input="form.image = $event.target.files[0]" type="file" name="image" id="image"
-                            class="rounded-lg border border-gray-400 p-2 w-full" />
-                        <div v-if="form.errors.image" class="block mb-2 mt-1 text-red-600">
-                            {{ form.errors.image }}
-                        </div>
-                    </div>
 
-                    <div class="mb-6">
-                        <label :for="form.addImages" class="block mb-2">If you choose to update please update all images as the previous will be <span
-                                class="text-red-400">deleted</span> (no more than five)</label>
-                        <input @input="form.addImages = $event.target.files" type="file" name="addImages[]" id="addImages"
-                            class="rounded-lg border border-gray-400 p-2 w-full" multiple />
-                        <div v-for="(item, index) in form.errors" :key="index" class="block mb-2 mt-1 text-red-600">
-                            <div v-if="index.includes('addImages')"> {{ form.errors[index] }}</div>
-                        </div>
-                    </div>
+                    <ImageGroup v-model="form.image" :errors="form.errors.image" label="Event's image" />
+
+                    <ImagesGroup v-model="form.addImages" :errors="form.errors" label="Event's additional images (no more than five)" />
+
                     <button :disabled="form.processing" type="submit"
                         class="w-full bg-green-600 text-white font-bold text-sm uppercase rounded hover:bg-green-700 flex items-center justify-center px-2 py-3 mt-6 disabled:bg-green-200">Update
                         The Event</button>

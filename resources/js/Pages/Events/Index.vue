@@ -2,7 +2,6 @@
 import Layout from "@/Pages/Shared/Layout.vue";
 import EventItem from "@/Pages/Shared/EventItem.vue";
 import Pagination from "@/Pages/Shared/Pagination.vue";
-import { usePage } from "@inertiajs/vue3";
 
 defineOptions({ layout: Layout });
 let props = defineProps({

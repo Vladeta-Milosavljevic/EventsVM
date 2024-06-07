@@ -36,6 +36,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user_id' => $request->user()->id ?? '',
                 'userName' => $request->user()->name ?? 'guest',
+                'isAdmin' => $request->user()->is_admin ?? false,
             ],
             'categories' => Category::all()->map(fn ($category) => ['id' => $category->id, 'name' => $category->name]),
             'filters' => $request->only(['search']),

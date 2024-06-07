@@ -14,6 +14,7 @@ let props = defineProps({
 defineEmits(['update:menu']);
 const page = usePage();
 let user_id = page.props.auth.user_id ? page.props.auth.user_id : ''
+let isAdmin = page.props.auth.isAdmin ? page.props.auth.isAdmin : 'false'
 let menu = props.menu;
 let searchFilter = computed(() => page.props.filters.search)
 let search = ref('');
@@ -47,18 +48,20 @@ watch(searchFilter, () => { search.value = searchFilter.value })
         </div>
         <div class="md:static  md:pb-0  md:justify-between absolute ease-in duration-500 md:z-auto z-[-1] md:w-auto w-full bg-blue-800 dark:bg-slate-800 mx-auto text-white flex flex-col items-center text-center md:flex-row text-sm font-bold uppercase px-4 mr-2"
             :class="[menu ? 'top-16' : 'top-[-190%]']">
-            <NavLink :linkData="route('index')" text="Home" />
+            <NavLink :linkData="route('index')" text="Home" pageComponent="Events/Index" />
             <div v-if="user_id" class="py-2 px-4 mx-2 w-36 md:w-auto">
                 <EventCreateModal />
             </div>
             <div v-if="user_id">
-                <NavLink :linkData="route('myEvents',user_id)" addStyle="whitespace-nowrap" text="My Events" />
+                <NavLink :linkData="route('myEvents', user_id)" text="My Events" pageComponent="Events/MyEvents" />
             </div>
-
-                <div v-if="!user_id">
-                    <NavLink :linkData="route('login')" addStyle="whitespace-nowrap" text="Log in" />
-                    <NavLink :linkData="route('register')" addStyle="whitespace-nowrap" text="Register" />
-                </div>
+            <div v-if="isAdmin=='true'">
+                <NavLink :linkData="route('category.index')" text="Categories" pageComponent="Category/CategoryIndex" />
+            </div>
+            <div v-if="!user_id">
+                <NavLink :linkData="route('login')" text="Log in" />
+                <NavLink :linkData="route('register')" text="Register" />
+            </div>
 
             <div class="ml-4">
                 <NavDropDown v-if="user_id" />
