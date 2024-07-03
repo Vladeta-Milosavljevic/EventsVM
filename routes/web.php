@@ -17,7 +17,6 @@ require __DIR__ . '/auth.php';
 Route::get('/', [EventController::class, 'index'])->name('index');
 Route::get('/myEvents/{user_id}', [EventController::class, 'myEvents'])->name('myEvents');
 Route::resource('/event', EventController::class);
-
 Route::resource('/category', CategoryController::class)->middleware('is_Admin');
 
 

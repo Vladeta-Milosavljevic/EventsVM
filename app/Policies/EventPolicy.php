@@ -30,7 +30,8 @@ class EventPolicy
      */
     public function create(User $user): bool
     {
-        //
+        $status= $user->id ? true : false;
+        return $status;
     }
 
     /**

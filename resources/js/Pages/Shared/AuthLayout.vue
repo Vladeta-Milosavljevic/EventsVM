@@ -5,6 +5,8 @@ import { ref, watch } from "vue";
 import { AiDryad, HeFilledUiMenuGrid, CgClose } from "@kalimahapps/vue-icons";
 import EventCreateModal from "./EventCreateModal.vue";
 import debounce from 'lodash.debounce'
+import Footer from "@/Pages/Shared/Footer.vue";
+
 
 let props=defineProps({
     filters: {type:Object,default:{}},
@@ -44,11 +46,6 @@ watch(
                     <AiDryad />
                     <Link :href="route('index')" class="ml-2 whitespace-nowrap">VM Events</Link>
                 </div>
-                <div @click="() => menu = !menu" class="cursor-pointer md:hidden">
-                    <HeFilledUiMenuGrid v-show="!menu" />
-                    <CgClose v-show="menu" />
-                </div>
-
             </div>
 
         </nav>
@@ -69,16 +66,7 @@ watch(
             <slot />
         </div>
 
-        <footer class="w-full border-t bg-white dark:bg-slate-800 pb-12 h-28 mt-auto">
-
-            <div class="w-full container mx-auto flex flex-col items-center">
-                <div class="flex flex-row text-center md:text-left md:justify-between py-6">
-                    <a href="#" class="uppercase px-3 dark:text-slate-100">About Us</a>
-                    <a href="#" class="uppercase px-3 dark:text-slate-100">Contact Us</a>
-                </div>
-                <div class="uppercase pb-6 dark:text-slate-100">&copy; Vladeta Milosavljevic</div>
-            </div>
-        </footer>
+        <Footer />
 
     </body>
 </template>

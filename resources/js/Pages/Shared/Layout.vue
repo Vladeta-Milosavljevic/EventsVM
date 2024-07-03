@@ -2,6 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 import Navbar from "@/Pages/Shared/Navbar.vue";
+import Footer from "@/Pages/Shared/Footer.vue";
 
 
 let menu = ref(false);
@@ -16,7 +17,7 @@ let menu = ref(false);
 
     </Head>
 
-    <body class="bg-white dark:bg-slate-700 flex flex-col min-h-screen">
+    <body class="bg-slate-50 dark:bg-slate-700 flex flex-col min-h-screen">
         <Navbar v-model:menu="menu" />
 
 
@@ -36,16 +37,7 @@ let menu = ref(false);
             <slot />
         </div>
 
-        <footer class="w-full border-t bg-white dark:bg-slate-800 pb-12 h-28 mt-auto">
-
-            <div class="w-full container mx-auto flex flex-col items-center">
-                <div class="flex flex-row text-center md:text-left md:justify-between py-6">
-                    <a href="#" class="uppercase px-3 dark:text-slate-100">About Us</a>
-                    <a href="#" class="uppercase px-3 dark:text-slate-100">Contact Us</a>
-                </div>
-                <div class="uppercase pb-6 dark:text-slate-100">&copy; Vladeta Milosavljevic</div>
-            </div>
-        </footer>
+        <Footer />
 
     </body>
 </template>
