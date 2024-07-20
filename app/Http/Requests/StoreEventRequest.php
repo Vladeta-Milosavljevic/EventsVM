@@ -27,9 +27,9 @@ class StoreEventRequest extends FormRequest
             'tags' => ['required', 'max:50', 'min:5'],
             'description' => ['required', 'max:500', 'min:25'],
             'price' => ['required', 'decimal:2','max:200'],
-            'image' => ['required', 'mimes:jpeg,jpg,png', 'max:1100'],
+            'image' => ['required', 'mimes:jpg,png', 'max:1100'],
             'addImages' => ['required', 'array', 'max:5'],
-            'addImages.*' => ['mimes:jpeg,jpg,png','max:1100'],
+            'addImages.*' => ['mimes:jpg,png','max:1100'],
         ];
     }
 
@@ -38,7 +38,7 @@ class StoreEventRequest extends FormRequest
         return [
             'category_id' => 'The category field is required',
             'addImages.max' => 'No more than five images can be uploaded',
-            'addImages.*.max' => 'The image is too large',
+            'addImages.*.max' => 'The images must not be greater than 1100 kilobytes',
             'addImages.*.mimes' => 'The image field must be a file of type: jpeg, jpg, png.',
         ];
     }

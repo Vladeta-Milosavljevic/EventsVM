@@ -24,7 +24,7 @@ watch(
         router.get(
             route("index"),
             { search: search.value },
-            // preserveState: true is not to be used because of the persistent layout which will interfere and not trigger the search update
+            // preserveState: true not to be used because of the persistent layout which will not activate the search properly
             { replace: true }
         );
     }, 500)
@@ -55,7 +55,7 @@ watch(searchFilter, () => { search.value = searchFilter.value })
             <div v-if="user_id">
                 <NavLink :linkData="route('myEvents', user_id)" text="My Events" pageComponent="Events/MyEvents" />
             </div>
-            <div v-if="isAdmin=='true'" class="md:mt-0 mt-2">
+            <div v-if="isAdmin == 'true'" class="md:mt-0 mt-2">
                 <NavLink :linkData="route('category.index')" text="Categories" pageComponent="Category/CategoryIndex" />
             </div>
             <div v-if="!user_id" class="flex md:flex-row flex-col">
@@ -63,7 +63,7 @@ watch(searchFilter, () => { search.value = searchFilter.value })
                 <NavLink :linkData="route('register')" text="Register" />
             </div>
 
-            <div class="ml-4 md:mt-0 -mt-1" >
+            <div class="ml-4 md:mt-0 -mt-1">
                 <NavDropDown v-if="user_id" />
             </div>
             <input v-model="search" placeholder="Search ..." v-html="search" type="text"

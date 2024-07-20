@@ -62,7 +62,7 @@ function reset() {
 
                     <InputGroup inputType="textarea" v-model="form.description" :errors="form.errors.description" label="Event's description" />
 
-                    <InputGroup type="decimal" v-model="form.price" :errors="form.errors.price"
+                    <InputGroup type="number" v-model="form.price" :errors="form.errors.price"
                         label="Event's ticket price. No more than 200 €, and dont forget two decimal places." />
 
                     <ImageGroup v-model="form.image" :errors="form.errors.image" label="Event's image" />

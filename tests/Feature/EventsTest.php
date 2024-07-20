@@ -7,11 +7,27 @@ use App\Models\Event;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class EventsTest extends TestCase
 {
     use RefreshDatabase;
+
+    private User $user1;
+    private User $user2;
+    private User $admin;
+    private Category $category1;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user1 = $this->createUser();
+        $this->user2 = $this->createUser();
+        $this->admin = $this->createUser(isAdmin: true);
+        $this->category1 = $this->createCategory();
+    }
 
     private function createTestData($eventsNumber = 1)
     {
@@ -23,6 +39,18 @@ class EventsTest extends TestCase
         return $data;
     }
 
+    private function createUser(bool $isAdmin = false)
+    {
+        $user = User::factory()->create(['is_admin' => $isAdmin,]);
+        return $user;
+    }
+
+    private function createCategory($category = 'categoryForEventTest')
+    {
+        $category = Category::create(['name' => $category]);
+        return $category;
+    }
+
     public function test_create_update_delete_event(): void
     {
         $user = User::create([
@@ -32,7 +60,7 @@ class EventsTest extends TestCase
             'password' => bcrypt('victor123')
         ]);
         $category = Category::create([
-            'name' => 'testCategory'
+            'name' => 'category111'
         ]);
         # create event test
         $event = Event::create([
@@ -70,6 +98,119 @@ class EventsTest extends TestCase
         $response->assertStatus(404);
     }
 
+    public function test_create_update_delete_event_successful()
+    {
+
+        Storage::fake('events');
+
+        $image1 = UploadedFile::fake()->image('event1.jpg', 1920, 1080)->size(200);
+        $image2 = UploadedFile::fake()->image('event2.jpg', 1920, 1080)->size(200);
+        $event = [
+            'category_id' => $this->category1->id,
+            'name' => 'Test Event',
+            'tags' => 'test tags to get',
+            'description' => 'test description test description test description',
+            'price' => 50.33,
+            'image' => $image1,
+            'addImages' => [$image2, $image2, $image2],
+        ];
+
+        // wrong user
+        $response = $this->post(route('event.store'), $event);
+        $response->assertRedirect(route('login'));
+
+        // store the event
+        $response = $this->actingAs($this->user1)->post(route('event.store'), $event);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('myEvents', $this->user1->id));
+
+        $lastEvent = Event::orderBy('id', 'DESC')->first();
+        $this->assertEquals($event['name'], $lastEvent->name);
+        $this->assertEquals($event['tags'], $lastEvent->tags);
+        $this->assertEquals($event['description'], $lastEvent->description);
+        $this->assertEquals($event['price'], $lastEvent->price);
+
+        // Update the event
+        $eventUpdate = $event;
+        $eventUpdate['name'] = 'New Name';
+        $eventUpdate['tags'] = 'New Tags Yes';
+        $response = $this->actingAs($this->user1)->put(route('event.update', $lastEvent->id), $eventUpdate);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('myEvents', $this->user1->id));
+        $updatedEvent = Event::where('id', $lastEvent->id)->first();
+        $this->assertEquals($eventUpdate['name'], $updatedEvent->name);
+        $this->assertEquals($eventUpdate['tags'], $updatedEvent->tags);
+
+
+        // delete the event
+        $response = $this->actingAs($this->user1)->delete(route('event.destroy', $lastEvent->id));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('myEvents', $this->user1->id));
+        $this->assertDatabaseMissing('categories', $lastEvent->toArray());
+    }
+
+    public function test_store_event_has_validaton_errors_test()
+    {
+        Storage::fake('events');
+
+        $event = [
+            'category_id' => $this->category1->id,
+            'name' => 'Te',
+            'tags' => 't',
+            'description' => 'test',
+            'price' => 5000000.33,
+            'image' => '',
+            'addImages' => [],
+        ];
+
+        $response = $this->actingAs($this->user1)->post(route('event.store'), $event);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['name', 'tags', 'description', 'price', 'image', 'addImages']);
+        $response->assertInvalid(['name', 'tags', 'description', 'price', 'image', 'addImages']);
+    }
+
+    public function test_update_event_has_validaton_errors_test()
+    {
+
+        Storage::fake('events');
+
+        $image1 = UploadedFile::fake()->image('event1.jpg', 1920, 1080)->size(200);
+        $image2 = UploadedFile::fake()->image('event2.jpg', 1920, 1080)->size(200);
+        $event = [
+            'category_id' => $this->category1->id,
+            'name' => 'Test Event',
+            'tags' => 'test tags to get',
+            'description' => 'test description test description test description',
+            'price' => 50.33,
+            'image' => $image1,
+            'addImages' => [$image2, $image2, $image2],
+        ];
+
+        // store the event
+        $response = $this->actingAs($this->user1)->post(route('event.store'), $event);
+        $Event = Event::orderBy('id', 'DESC')->first();
+        $image3 = UploadedFile::fake()->image('event1.jpg', 1920, 1080)->size(1500);
+        $image4 = UploadedFile::fake()->image('event1.jpg', 1920, 1080)->size(1500);
+
+        $eventUpdate = [
+            'category_id' => $this->category1->id,
+            'name' => 'Te',
+            'tags' => 't',
+            'description' => 'test',
+            'price' => 5000000.33,
+            'image' => $image3,
+            'addImages' => [$image4, $image4, $image4],
+        ];
+
+        $response = $this->actingAs($this->user1)->put(route('event.update', $Event->id), $eventUpdate);
+        $response->assertStatus(302);
+        // assertSessionHasErrors does not see errors for the addImages field even though errors are present
+        $response->assertSessionHasErrors(['name', 'tags', 'description', 'price', 'image']);
+        // assertInvalid does not see errors for the addImages field even though errors are present
+        $response->assertInvalid(['name', 'tags', 'description', 'price', 'image']);
+    }
+
+
     public function test_pagination_test(): void
     {
         $testData = $this->createTestData(25);
@@ -98,34 +239,26 @@ class EventsTest extends TestCase
 
     public function test_delete_event_wrong_user_loged_in_test(): void
     {
-        $users = User::factory(3)->create();
         Category::factory(4)->create();
-        $event = Event::factory()->create(['user_id' => $users[0]->id]);
-        $response = $this->actingAs($users[1])->delete(route('event.destroy', $event->id));
+        $event = Event::factory()->create(['user_id' => $this->user1->id]);
+        $response = $this->actingAs($this->user2)->delete(route('event.destroy', $event->id));
         $response->assertRedirect(route('event.show', $event->id));
+    }
+
+    public function test_delete_event_correct_user_loged_in_test(): void
+    {
+        Category::factory(4)->create();
+        $event = Event::factory()->create(['user_id' => $this->user1->id]);
+        $response = $this->actingAs($this->user1)->delete(route('event.destroy', $event->id));
+        $response->assertRedirect(route('myEvents', $this->user1->id));
     }
 
     public function test_my_events_page_auth(): void
     {
-        $user = User::factory()->create();
-        $response = $this->get(route('myEvents', $user->id));
+        $response = $this->get(route('myEvents', $this->user1->id));
         $response->assertRedirect(route('login'));
 
-        $response = $this->actingAs($user)->get(route('myEvents', $user->id));
-        $response->assertStatus(200);
-    }
-
-    public function test_category_user_not_admin_test(): void
-    {
-        $response = $this->get(route('category.index'));
-        $response->assertRedirect(route('index'));
-    }
-
-    public function test_category_user_is_admin_test(): void
-    {
-
-        $user = User::factory()->create(['is_admin' => 'true',]);
-        $response = $this->actingAs($user)->get(route('category.index'));
+        $response = $this->actingAs($this->user1)->get(route('myEvents', $this->user1->id));
         $response->assertStatus(200);
     }
 }

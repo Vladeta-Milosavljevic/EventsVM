@@ -20,7 +20,7 @@ watch(
         router.get(
             route("index"),
             { search: value },
-            // preserveState: true NE UBACUJ jer je layout trajan (persistent) i nece aktivirati pretragu
+            // preserveState: true not to be used because of the persistent layout which will not activate the search properly
             { replace: true }
         );
         console.log('test');

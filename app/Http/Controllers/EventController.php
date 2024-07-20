@@ -50,6 +50,7 @@ class EventController extends Controller
                     'name' => $events->name,
                     'tags' => $events->tags,
                     'price' => $events->price,
+                    // this is only for development, for seeding the database using URL images,
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );
@@ -82,17 +83,20 @@ class EventController extends Controller
 
         $event = Event::create($validatedEvent);
         Mail::to(env('TEST_EMAIL'))->queue(new EventCreated($event->id, $event->name));
-        return redirect(route('myEvents', ['user_id' => $request->user()->id]));
+        return redirect(route('myEvents', $request->user()->id));
     }
 
     public function show(Event $event)
     {
         $imagesList = array_merge([$event['image']], $event['addImages']);
+
+        // this is only for development, for seeding the database using URL images,
         $images = [];
         foreach ($imagesList as $image) {
             array_push($images, str_contains($image, "https") ? $image : Storage::url($image));
         }
         $event['images'] = $images;
+
         $event['category'] = $event->category->name;
         return Inertia::render('Events/EventShow', [
             'event' => new EventResource($event),
@@ -109,6 +113,7 @@ class EventController extends Controller
             return redirect(route('event.show', $event->id));
         }
         $validatedEvent = $request->validated();
+        // If images are updated, old ones are deleted before the new ones are stored
         if ($validatedEvent['image'] != null) {
             Storage::delete($event->image);
             $imageName = date('YmdHi') . '-' . $validatedEvent['image']->getClientOriginalName();
@@ -135,7 +140,7 @@ class EventController extends Controller
         }
         $event->update($validatedEvent);
         Mail::to(env('TEST_EMAIL'))->queue(new EventUpdated($event->id, $event->name));
-        return redirect(route('myEvents', Auth::user()->id));
+        return redirect(route('myEvents', $request->user()->id));
     }
 
     public function myEvents(Request $request)
@@ -153,6 +158,7 @@ class EventController extends Controller
                     'name' => $events->name,
                     'tags' => $events->tags,
                     'price' => $events->price,
+                    // this is only for development, for seeding the database using URL images,
                     'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
                 ]
             );

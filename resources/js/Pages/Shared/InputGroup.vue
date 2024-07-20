@@ -12,7 +12,6 @@ let props = defineProps({
 });
 
 defineEmits(['update:modelValue']);
-
 const input = ref(null);
 onMounted(() => {
     if (props.autofocus) {
@@ -25,7 +24,7 @@ onMounted(() => {
 <template>
     <div class="mb-6">
         <label :for="modelValue" class="block mb-2 dark:text-slate-100">{{ label }}</label>
-        <Component :is="inputType" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" ref="input" :required="required" :type="type"
+        <Component :is="inputType" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" ref="input" :required="required" :type="type" step="0.01"
             class="rounded-lg border border-gray-400 p-2 w-full focus:border-green-500 dark:focus:border-green-600 focus:ring-green-500 dark:focus:ring-green-600 dark:text-gray-700"
             :class="{'resize-y':inputType==='textarea'}" />
         <div v-if="errors" class="block mb-2 mt-1 text-red-600">

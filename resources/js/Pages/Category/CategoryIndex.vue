@@ -29,6 +29,8 @@ function editOpen(category) {
         <div class="flex flex-wrap justify-center">
             <CategoryForm :routeData="route('category.store')" text="Create a new category" />
             <div v-if="showEdit" class="w-full">
+
+                <!-- key is used here to re-render the component when category is changed -->
                 <CategoryForm :key="editData" :routeData="route('category.update', editData.id)" :categoryData="editData" text="Edit a category"
                     @updateCompleted="editClose()" />
                 <button @click="editClose()"
