@@ -89,14 +89,12 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $imagesList = array_merge([$event['image']], $event['addImages']);
-
         // this is only for development, for seeding the database using URL images,
         $images = [];
         foreach ($imagesList as $image) {
             array_push($images, str_contains($image, "https") ? $image : Storage::url($image));
         }
         $event['images'] = $images;
-
         $event['category'] = $event->category->name;
         return Inertia::render('Events/EventShow', [
             'event' => new EventResource($event),

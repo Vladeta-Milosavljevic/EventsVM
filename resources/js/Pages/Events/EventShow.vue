@@ -19,6 +19,7 @@ let user = page.props.auth.userName
 const form = useForm({
     event_id: props.event.data.id,
 })
+console.log(props.event)
 
 </script>
 
@@ -37,7 +38,7 @@ const form = useForm({
             </swiper-container>
             <div class="px-6 py-4">
                 <div class="font-bold text-xl my-2 dark:text-slate-100">{{ event.name }}</div>
-                <Link :href="route('index')" method="POST" :data="{ category: event.category }" as="button"
+                <Link :href="route('index')"  :data="{ category: event.category }" as="button"
                     class="text-gray-700 hover:text-gray-900 dark:text-slate-100 dark:hover:text-slate-200 hover:underline text-base w-auto">
                 {{ event.category }} <br>
                 </Link>
