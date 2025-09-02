@@ -23,10 +23,13 @@ class EventFactory extends Factory
             'tags' => fake()->sentence(3),
             'description' => fake()->paragraph(5),
             'price' => fake()->randomFloat(2, 10, 100),
-            'image' => fake()->imageUrl(1920, 1080, 'event'),
+            'image' => 'public/images/seedImage.jpg',
             'addImages' => [
-                fake()->imageUrl(1920, 1080, 'event'), fake()->imageUrl(1920, 1080, 'event'), fake()->imageUrl(1920, 1080, 'event'),
-                fake()->imageUrl(1920, 1080, 'event'), fake()->imageUrl(1920, 1080, 'event'),
+                'public/images/seedImage1.jpg',
+                'public/images/seedImage2.jpg',
+                'public/images/seedImage3.jpg',
+                'public/images/seedImage4.jpg',
+                'public/images/seedImage5.jpg',
             ],
         ];
     }

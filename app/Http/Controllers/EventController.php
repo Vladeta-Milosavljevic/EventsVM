@@ -38,20 +38,19 @@ class EventController extends Controller
                 $query->where('tags', 'like', "%{$tagData}%");
             })
             ->when($categoryData, function ($query, $categoryData) {
-                $query->whereHas('category', fn ($query) => $query->where('name', 'like', $categoryData));
+                $query->whereHas('category', fn($query) => $query->where('name', 'like', $categoryData));
             })
             ->orderBy('id', 'desc')
             ->paginate(12)
             ->withQueryString()
             ->through(
-                fn ($events) => [
+                fn($events) => [
                     'id' => $events->id,
                     'category' => $events->category->name,
                     'name' => $events->name,
                     'tags' => $events->tags,
                     'price' => $events->price,
-                    // this is only for development, for seeding the database using URL images,
-                    'image' => str_contains($events->image, "https") ? $events->image : Storage::url($events->image),
+                    'image' => Storage::url($events->image),
                 ]
             );
         return Inertia::render(
@@ -92,7 +91,7 @@ class EventController extends Controller
         // this is only for development, for seeding the database using URL images,
         $images = [];
         foreach ($imagesList as $image) {
-            array_push($images, str_contains($image, "https") ? $image : Storage::url($image));
+            array_push($images, Storage::url($image));
         }
         $event['images'] = $images;
         $event['category'] = $event->category->name;
@@ -144,13 +143,13 @@ class EventController extends Controller
     public function myEvents(Request $request)
     {
         $user_id = $request->user_id;
-        $myEvents = fn () => Event::with('category')
+        $myEvents = fn() => Event::with('category')
             ->where('user_id', $user_id)
             ->orderBy('id', 'desc')
             ->paginate(12)
             ->withQueryString()
             ->through(
-                fn ($events) => [
+                fn($events) => [
                     'id' => $events->id,
                     'category' => $events->category->name,
                     'name' => $events->name,
